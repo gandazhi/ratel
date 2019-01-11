@@ -61,6 +61,8 @@ public class SimpleClient {
 		
 		EventLoopGroup group = new NioEventLoopGroup();
 		try {
+			serverAddress = "localhost";
+			port = 1024;
 			Bootstrap bootstrap = new Bootstrap()
 					.group(group)
 					.channel(NioSocketChannel.class)
