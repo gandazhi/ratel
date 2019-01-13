@@ -16,7 +16,7 @@ public class ClientSide{
 	
 	private String nickname;
 	
-	private List<Poker> pokers;
+	private List<Poker> pokers; //用来存牌
 	
 	private ClientStatus status;
 	
@@ -28,7 +28,7 @@ public class ClientSide{
 	
 	private ClientSide pre;
 	
-	private transient Channel channel;
+	private transient Channel channel; //用transient关键字标记的成员变量不参与序列化 不让channel参与序列化
 	
 	public ClientSide() {}
 

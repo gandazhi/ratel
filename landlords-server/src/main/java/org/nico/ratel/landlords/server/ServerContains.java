@@ -28,14 +28,14 @@ public class ServerContains {
 	 */
 	public final static Map<Integer, ClientSide> CLIENT_SIDE_MAP = new ConcurrentSkipListMap<>();
 	
-	public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>();
+	public final static Map<String, Integer> CHANNEL_ID_MAP = new ConcurrentHashMap<>(); //用于存放客户端连接id的map
 	
 	private final static AtomicInteger CLIENT_ATOMIC_ID = new AtomicInteger(1);
 	
 	private final static AtomicInteger SERVER_ATOMIC_ID = new AtomicInteger(1);
 	
 	public final static int getClientId() {
-		return CLIENT_ATOMIC_ID.getAndIncrement();
+		return CLIENT_ATOMIC_ID.getAndIncrement(); //返回原子性的integer + 1后的值
 	}
 	
 	public final static int getServerId() {

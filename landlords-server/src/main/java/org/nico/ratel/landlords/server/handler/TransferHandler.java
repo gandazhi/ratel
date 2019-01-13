@@ -21,18 +21,19 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 
 	@Override
 	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+		//客户端与服务端的连接注册
 		Channel ch = ctx.channel();
 		
 		//init client info
 		ClientSide clientSide = new ClientSide(getId(ctx.channel()), ClientStatus.TO_CHOOSE, ch);
 		clientSide.setNickname(String.valueOf(clientSide.getId()));
-		clientSide.setRole(ClientRole.PLAYER);
+		clientSide.setRole(ClientRole.PLAYER); //设置客户端权限为player
 		
 		ServerContains.CLIENT_SIDE_MAP.put(clientSide.getId(), clientSide);
 		SimplePrinter.serverLog("Has client connect to the server：" + clientSide.getId());
 		
-		ChannelUtils.pushToClient(ch, ClientEventCode.CODE_CLIENT_CONNECT, String.valueOf(clientSide.getId()));
-		ChannelUtils.pushToClient(ch, ClientEventCode.CODE_CLIENT_NICKNAME_SET, null);
+		ChannelUtils.pushToClient(ch, ClientEventCode.CODE_CLIENT_CONNECT, String.valueOf(clientSide.getId())); //把客户端连接到服务端的事情推送给 客户端
+		ChannelUtils.pushToClient(ch, ClientEventCode.CODE_CLIENT_NICKNAME_SET, null); //向客户端推送设置用户名
 	}
 
 	
@@ -42,7 +43,7 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 			ServerTransferDataProtoc serverTransferData = (ServerTransferDataProtoc) msg;
 			ServerEventCode code = ServerEventCode.valueOf(serverTransferData.getCode());
 			if(code != null && code != ServerEventCode.CODE_CLIENT_HEAD_BEAT) {
-				ClientSide client = ServerContains.CLIENT_SIDE_MAP.get(getId(ctx.channel()));
+				ClientSide client = ServerContains.CLIENT_SIDE_MAP.get(getId(ctx.channel())); // TODO CLIENT_SIDE_MAP 这个map是用来干嘛的
 				SimplePrinter.serverLog(client.getId() + " | " + client.getNickname() + " do:" + code.getMsg());
 				ServerEventListener.get(code).call(client, serverTransferData.getData());
 			}
@@ -79,6 +80,7 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
     	String longId = channel.id().asLongText();
     	Integer clientId = ServerContains.CHANNEL_ID_MAP.get(longId);
     	if(null == clientId){
+    		//空 说明该客户端与服务端还没有连接，则把id放入map中
     		clientId = ServerContains.getClientId();
     		ServerContains.CHANNEL_ID_MAP.put(longId, clientId);
     	}
