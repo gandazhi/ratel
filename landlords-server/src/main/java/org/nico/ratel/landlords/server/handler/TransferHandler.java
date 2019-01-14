@@ -43,13 +43,14 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 			ServerTransferDataProtoc serverTransferData = (ServerTransferDataProtoc) msg;
 			ServerEventCode code = ServerEventCode.valueOf(serverTransferData.getCode());
 			if(code != null && code != ServerEventCode.CODE_CLIENT_HEAD_BEAT) {
-				ClientSide client = ServerContains.CLIENT_SIDE_MAP.get(getId(ctx.channel())); // TODO CLIENT_SIDE_MAP 这个map是用来干嘛的
+				ClientSide client = ServerContains.CLIENT_SIDE_MAP.get(getId(ctx.channel())); // 根据channel从客户端的map中获取client
 				SimplePrinter.serverLog(client.getId() + " | " + client.getNickname() + " do:" + code.getMsg());
 				ServerEventListener.get(code).call(client, serverTransferData.getData());
 			}
 		}
 	}
 
+	//捕获异常
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if(cause instanceof java.io.IOException) {
@@ -59,9 +60,11 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 			cause.printStackTrace();
 		}
 	}
-	
+
+	// 用户事件
     @Override  
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {  
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		//心跳包
         if (evt instanceof IdleStateEvent) {  
             IdleStateEvent event = (IdleStateEvent) evt;  
             if (event.state() == IdleState.READER_IDLE) {  
@@ -95,4 +98,11 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 			ServerEventListener.get(ServerEventCode.CODE_CLIENT_OFFLINE).call(client, null);
 		}
     }
+
+    //客户端与服务端断开连接,断开连接的时候手动释放连接
+	@Override
+	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+		Channel channel = ctx.channel();
+		clientOfflineEvent(channel);
+	}
 }
