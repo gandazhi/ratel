@@ -11,7 +11,7 @@ public interface ServerEventListener {
 
 	public void call(ClientSide client, String data);
 
-	public final static Map<ServerEventCode, ServerEventListener> LISTENER_MAP = new HashMap<>();
+	public final static Map<ServerEventCode, ServerEventListener> LISTENER_MAP = new HashMap<>(); // 用于存放不同的监听器的map
 	
 	final static String LISTENER_PREFIX = "org.nico.ratel.landlords.server.event.ServerEventListener_";
 	
@@ -22,10 +22,10 @@ public interface ServerEventListener {
 			if(ServerEventListener.LISTENER_MAP.containsKey(code)){
 				listener = ServerEventListener.LISTENER_MAP.get(code);
 			}else{
-				String eventListener = LISTENER_PREFIX + code.name();
-				Class<ServerEventListener> listenerClass = (Class<ServerEventListener>) Class.forName(eventListener);
+				String eventListener = LISTENER_PREFIX + code.name(); //拼装类的包路径
+				Class<ServerEventListener> listenerClass = (Class<ServerEventListener>) Class.forName(eventListener); //通过反射获取class对象
 				try {
-					listener = listenerClass.getDeclaredConstructor().newInstance();
+					listener = listenerClass.getDeclaredConstructor().newInstance(); //getDeclaredConstructor() 返回具有指定参数列表构造函数的构造函数对象。获取到listener对象
 				} catch (InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
 				}

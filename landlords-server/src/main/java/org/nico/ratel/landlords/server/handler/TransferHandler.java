@@ -44,7 +44,7 @@ public class TransferHandler extends ChannelInboundHandlerAdapter{
 			ServerEventCode code = ServerEventCode.valueOf(serverTransferData.getCode());
 			if(code != null && code != ServerEventCode.CODE_CLIENT_HEAD_BEAT) {
 				ClientSide client = ServerContains.CLIENT_SIDE_MAP.get(getId(ctx.channel())); // 根据channel从客户端的map中获取client
-				SimplePrinter.serverLog(client.getId() + " | " + client.getNickname() + " do:" + code.getMsg());
+				SimplePrinter.serverLog(client.getId() + " | " + client.getNickname() + " do:" + code.getMsg() + "|" + serverTransferData.getData());
 				ServerEventListener.get(code).call(client, serverTransferData.getData());
 			}
 		}
