@@ -4,6 +4,7 @@ import org.nico.ratel.landlords.channel.ChannelUtils;
 import org.nico.ratel.landlords.entity.ClientSide;
 import org.nico.ratel.landlords.enums.ClientEventCode;
 import org.nico.ratel.landlords.helper.MapHelper;
+import org.nico.ratel.landlords.print.SimplePrinter;
 import org.nico.ratel.landlords.server.ServerContains;
 
 public class ServerEventListener_CODE_CLIENT_NICKNAME_SET implements ServerEventListener{
@@ -13,12 +14,20 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET implements ServerEvent
 	@Override
 	public void call(ClientSide client, String nickname) {
 		
-		if (nickname.trim().length() > NICKNAME_MAX_LENGTH) {
-			String result = MapHelper.newInstance().put("invalidLength", nickname.trim().length()).json();
+		if (nickname.trim().length() > NICKNAME_MAX_LENGTH) { //判断设置的用户名是否超过10位
+			String result = MapHelper.newInstance().put("invalidLength", nickname.trim().length()).json(); //向一个linkedHashMap中put设置的username的长度
 			ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, result);
 		}else{
-			ServerContains.CLIENT_SIDE_MAP.get(client.getId()).setNickname(nickname);
-			ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null);
+			// 判断username是否重复
+			ServerContains.CLIENT_SIDE_MAP.forEach((k,v) -> {
+				if (v.getNickname().equals(nickname)){
+					String usernameNotTheSame = MapHelper.newInstance().put("username not the same", nickname).json();
+					ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, usernameNotTheSame);
+					SimplePrinter.serverLog(client.getId() + " | " + nickname + " | " + "重复");
+				}
+			});
+			ServerContains.CLIENT_SIDE_MAP.get(client.getId()).setNickname(nickname); //成功设置username
+			ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null); //向客户端推送显示全局列表消息
 		}
 	}
 
