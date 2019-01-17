@@ -1,5 +1,6 @@
 package org.nico.ratel.landlords.server.event;
 
+import org.nico.noson.util.string.StringUtils;
 import org.nico.ratel.landlords.channel.ChannelUtils;
 import org.nico.ratel.landlords.entity.ClientSide;
 import org.nico.ratel.landlords.enums.ClientEventCode;
@@ -18,6 +19,12 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET implements ServerEvent
 			String result = MapHelper.newInstance().put("invalidLength", nickname.trim().length()).json(); //向一个linkedHashMap中put设置的username的长度
 			ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, result);
 		}else{
+			// 判断nickname不能为空
+			if (StringUtils.isBlank(nickname)){
+				String result = MapHelper.newInstance().put("username is not blank", nickname).json();
+				ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, result);
+				SimplePrinter.serverLog(client.getId() + " | " + "username不能为空" + nickname);
+			}
 			// 判断username是否重复
 			ServerContains.CLIENT_SIDE_MAP.forEach((k,v) -> {
 				if (v.getNickname().equals(nickname)){
