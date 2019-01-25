@@ -8,6 +8,7 @@ import org.nico.ratel.landlords.enums.ClientType;
 
 import io.netty.channel.Channel;
 
+//相当于session
 public class ClientSide{
 
 	private int id;

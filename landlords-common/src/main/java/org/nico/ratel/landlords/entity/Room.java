@@ -12,13 +12,13 @@ public class Room{
 
 	private int id;
 	
-	private String roomOwner;
+	private String roomOwner; //房间所属人的nickName
 	
-	private RoomStatus status;
+	private RoomStatus status; //房间状态
 	
-	private RoomType type;
+	private RoomType type; //房间类型
 	
-	private Map<Integer, ClientSide> clientSideMap;
+	private Map<Integer, ClientSide> clientSideMap; //用于存放用户  Integer 用户id  clientSide用户一些数据
 	
 	private LinkedList<ClientSide> clientSideList;
 	
@@ -30,13 +30,13 @@ public class Room{
 	
 	private int lastSellClient = -1;
 	
-	private int currentSellClient = -1;
+	private int currentSellClient = -1; //用于存放当前在操作的客户端id
 	
 	private int difficultyCoefficient;
 	
-	private long lastFlushTime;
+	private long lastFlushTime; // 存放上一次向客户端推送数据的时间
 	
-	private long createTime;
+	private long createTime; // 房间创建时间
 	
 	public Room() {
 	}

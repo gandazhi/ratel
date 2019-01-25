@@ -21,7 +21,7 @@ public class ServerContains {
 	/**
 	 * The map of server side
 	 */
-	private final static Map<Integer, Room> ROOM_MAP = new ConcurrentSkipListMap<>();
+	private final static Map<Integer, Room> ROOM_MAP = new ConcurrentSkipListMap<>(); //用于存房间信息
 	
 	/**
 	 * The list of client side
