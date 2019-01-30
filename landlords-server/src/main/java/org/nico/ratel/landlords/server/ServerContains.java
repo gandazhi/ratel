@@ -39,7 +39,7 @@ public class ServerContains {
 	}
 	
 	public final static int getServerId() {
-		return SERVER_ATOMIC_ID.getAndIncrement();
+		return SERVER_ATOMIC_ID.getAndIncrement(); //返回服务端id 原子性的integer + 1后的值
 	}
 	
 	public final static ThreadPoolExecutor THREAD_EXCUTER = new ThreadPoolExecutor(500, 500, 0, TimeUnit.MILLISECONDS,
