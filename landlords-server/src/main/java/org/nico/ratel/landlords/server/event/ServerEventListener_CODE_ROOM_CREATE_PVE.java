@@ -17,7 +17,7 @@ public class ServerEventListener_CODE_ROOM_CREATE_PVE implements ServerEventList
 	@Override
 	public void call(ClientSide clientSide, String data) {
 		
-		int difficultyCoefficient = Integer.valueOf(data);
+		int difficultyCoefficient = Integer.valueOf(data); //获取难度
 		if(RobotDecisionMakers.contains(difficultyCoefficient)) {
 
 			Room room = new Room(ServerContains.getServerId());

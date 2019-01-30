@@ -7,6 +7,7 @@ import org.nico.ratel.landlords.utils.OptionsUtils;
 
 import io.netty.channel.Channel;
 
+//设置nickname成功后选择类型
 public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener{
 
 	@Override
@@ -18,7 +19,7 @@ public class ClientEventListener_CODE_SHOW_OPTIONS extends ClientEventListener{
 		SimplePrinter.printNotice("Please enter the number of options (enter [EXIT] log out)");
 		String line = SimpleWriter.write("options");
 		
-		if(line.equalsIgnoreCase("EXIT")) {
+		if(line.equalsIgnoreCase("EXIT")) { //equalsIgnoreCase 不区分大小写
 			System.exit(0);
 		}else {
 			int choose = OptionsUtils.getOptions(line);
