@@ -22,17 +22,21 @@ public class ServerEventListener_CODE_CLIENT_NICKNAME_SET implements ServerEvent
 			// 判断nickname不能为空
 			if (StringUtils.isBlank(nickname)){
 				String result = MapHelper.newInstance().put("username is not blank", nickname).json();
-				ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, result);
+				ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, result, "username is not blank");
 				SimplePrinter.serverLog(client.getId() + " | " + "username不能为空" + nickname);
+				return;
 			}
+
 			// 判断username是否重复
-			ServerContains.CLIENT_SIDE_MAP.forEach((k,v) -> {
-				if (v.getNickname().equals(nickname)){
+			for (ClientSide value : ServerContains.CLIENT_SIDE_MAP.values()) {
+				if (value.getNickname().equals(nickname)){
 					String usernameNotTheSame = MapHelper.newInstance().put("username not the same", nickname).json();
-					ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, usernameNotTheSame);
+					ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_CLIENT_NICKNAME_SET, usernameNotTheSame, "username is not same");
 					SimplePrinter.serverLog(client.getId() + " | " + nickname + " | " + "重复");
+					return;
 				}
-			});
+			}
+
 			ServerContains.CLIENT_SIDE_MAP.get(client.getId()).setNickname(nickname); //成功设置username
 			ChannelUtils.pushToClient(client.getChannel(), ClientEventCode.CODE_SHOW_OPTIONS, null); //向客户端推送显示全局列表消息
 		}
